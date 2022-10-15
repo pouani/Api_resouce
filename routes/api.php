@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ImageController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +27,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('user', [UserController::class, 'user']);
     Route::post('users/info', [UserController::class, 'updateInfo']);
     Route::post('users/password', [UserController::class, 'updatePassword']);
+    Route::post('upload', [ImageController::class, 'upload']);
 
     Route::apiResource('users', App\Http\Controllers\UserController::class);
 
@@ -33,4 +36,6 @@ Route::middleware(['auth:api'])->group(function () {
 
     //products routes
     Route::apiResource('products', App\Http\Controllers\ProductController::class);
+
+    Route::apiResource('orders', OrderController::class)->only('index', 'show');
 });
