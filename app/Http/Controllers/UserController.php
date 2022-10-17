@@ -12,18 +12,24 @@ class UserController extends Controller
 {
     public function index()
     {
+        \Gate::authorize('view', 'users');
+
         $users = User::paginate();
         return UserResource::collection($users);
     }
 
     public function show($id)
     {
+        \Gate::authorize('view', 'users');
+
         $user = User::find($id);
         return new UserResource($user);
     }
 
     public function store(Request $request)
     {
+        \Gate::authorize('edit', 'users');
+
         $validator =  Validator::make($request->all(),[
             'name' =>'required|string',
             'email' =>'required|string|email|unique:users,email',
@@ -56,6 +62,8 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
+        \Gate::authorize('edit', 'users');
+        
         $user = User::find($id);
 
         $validator =  Validator::make($request->all(),[
@@ -95,6 +103,8 @@ class UserController extends Controller
 
     public function destroy($id)
     {
+        \Gate::authorize('edit', 'users');
+        
         try{
             User::destroy($id);
             return response()->json([
@@ -110,7 +120,12 @@ class UserController extends Controller
 
     public function user()
     {
-        return \Auth::user();
+        $user = \Auth::user();
+        return (new UserResource($user))->additional([
+            'data' => [
+                'permissions' => $user->permissions(),
+            ]
+        ]);
     }
 
     public function updateInfo(Request $request)

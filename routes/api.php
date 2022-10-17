@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PermissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,9 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('users/password', [UserController::class, 'updatePassword']);
     Route::post('upload', [ImageController::class, 'upload']);
 
+    //export order routes
+    Route::get('export', [App\Http\Controllers\OrderController::class, 'export']);
+
     Route::apiResource('users', App\Http\Controllers\UserController::class);
 
     //roles routes
@@ -38,4 +42,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::apiResource('products', App\Http\Controllers\ProductController::class);
 
     Route::apiResource('orders', OrderController::class)->only('index', 'show');
+
+    Route::apiResource('permissions', PermissionController::class)->only('index');
 });

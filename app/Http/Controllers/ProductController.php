@@ -13,18 +13,22 @@ class ProductController extends Controller
 {
     public function index()
     {
+        \Gate::authorize('view', 'products');
+
         $products = Product::paginate();
         return ProductResource::collection($products);
     }
 
     public function show($id)
     {
+        \Gate::authorize('view', 'products');
+
         return new ProductResource(Product::find($id));
     }
 
     public function store(Request $request)
     {
-        
+        \Gate::authorize('edit', 'products');
         
         $validator =  Validator::make($request->all(),[
             'title' =>'required|string',
@@ -61,6 +65,8 @@ class ProductController extends Controller
 
     public function update(Request $request, $id)
     {
+        \Gate::authorize('edit', 'products');
+
         $validator =  Validator::make($request->all(),[
             'title' =>'required|string',
             'image' =>'required',
@@ -97,6 +103,8 @@ class ProductController extends Controller
 
     public function destroy($id)
     {
+        \Gate::authorize('edit', 'products');
+        
         Product::destroy($id);
 
         return response()->json([
